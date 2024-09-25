@@ -1,0 +1,21 @@
+.canvas-container {
+  /* background-color: blue; */
+  width: 100vw !important;
+  height: 60vh !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+#canvas {
+  width: 90% !important;
+  height: 60vh !important;
+  border-radius: 0.5rem !important;
+}
+
+.upper-canvas {
+  width: 90% !important;
+  height: 60vh !important;
+  left: 5% !important;
+  border-radius: 0.5rem !important;
+}
