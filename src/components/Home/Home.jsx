@@ -1,6 +1,6 @@
 import stl from "./Home.module.css";
 import { useRef, useState, useEffect } from "react";
-import { Canvas, FabricImage } from "fabric";
+import { Canvas, FabricImage, ActiveSelection } from "fabric";
 import "./Styles.css";
 import { FaPlus } from "react-icons/fa";
 import { FaTrashCan } from "react-icons/fa6";
@@ -37,25 +37,17 @@ const Home = () => {
           canvas.setWidth(imgObj.width);
           canvas.setHeight(imgObj.height);
           const fabricImg = new FabricImage(imgObj);
+          fabricImg.set({
+            left: 0,
+            top: 0,
+            selectable: true,
+          });
           setFileArray((prev) => [...prev, { ...fabricImg, name: file.name }]);
           canvas.add(fabricImg);
           canvas.renderAll();
         };
       };
       reader.readAsDataURL(file);
-    }
-  };
-
-  const checkObjects = () => {
-    console.log(canvas.getObjects());
-  };
-
-  const undoLastImage = () => {
-    const objects = canvas.getObjects();
-    console.log(objects);
-    if (objects.length > 0) {
-      canvas.remove(objects[objects.length - 1]);
-      canvas.renderAll();
     }
   };
 
@@ -70,14 +62,26 @@ const Home = () => {
   const deleteImage = (index) => {
     const objects = canvas.getObjects();
 
-    if (objects.length > 0) {
+    const updatedFileArray = fileArray.filter((_, i) => i !== index);
+    setFileArray(updatedFileArray);
+
+    if (objects.length > index) {
       canvas.remove(objects[index]);
       canvas.renderAll();
     }
   };
 
-  const focusImage = (image) => {
-    // console.log(image);
+  const focusImage = (index) => {
+    const objects = canvas.getObjects();
+    canvas.discardActiveObject();
+    console.log(objects[index]);
+    const selection = new ActiveSelection([objects[index]], {
+      canvas: canvas,
+    });
+
+    console.log(sel);
+    canvas.setActiveObject(selection);
+    canvas.requestRenderAll();
   };
 
   return (
@@ -105,9 +109,9 @@ const Home = () => {
           <div
             className={stl.fileBlock}
             key={index}
-            onClick={() => focusImage(file)}
+            onClick={() => focusImage(index)}
           >
-            <span>{file.name}</span>
+            <span>{file?.name}</span>
             <FaTrashCan
               className={stl.trash}
               onClick={() => deleteImage(index)}
@@ -122,7 +126,6 @@ const Home = () => {
           className={stl.hidden}
         />
       </div>
-      <button onClick={undoLastImage}>Undo Last Image</button>
     </div>
   );
 };
