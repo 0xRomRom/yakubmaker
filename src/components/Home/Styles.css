@@ -1,6 +1,6 @@
 .canvas-container {
   /* background-color: blue; */
-  width: 100vw !important;
+  width: 100% !important;
   height: 60vh !important;
   display: flex !important;
   justify-content: center !important;

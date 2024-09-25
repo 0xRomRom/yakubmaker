@@ -34,8 +34,10 @@ const Home = () => {
         const imgObj = new Image();
         imgObj.src = event.target.result;
         imgObj.onload = () => {
-          canvas.setWidth(imgObj.width);
-          canvas.setHeight(imgObj.height);
+          if (fileArray.length === 0) {
+            canvas.setWidth(imgObj.width);
+            canvas.setHeight(imgObj.height);
+          }
           const fabricImg = new FabricImage(imgObj);
           fabricImg.set({
             left: 0,
@@ -86,53 +88,55 @@ const Home = () => {
 
   return (
     <div className={stl.home} onClick={canvasClicked}>
-      <h1 className={stl.title}>
-        <img
-          src="../Yakublogo.webp"
-          alt="Yakublogo"
-          className={stl.yakubLogo}
-        />{" "}
-        Maker
-      </h1>
-      <canvas
-        id="canvas"
-        ref={canvasRef}
-        className={stl.canvas}
-        width="100vw"
-      />
-      <div className={stl.assetsArray}>
-        <button className={stl.addCta} onClick={handleAddImageClick}>
-          <FaPlus />
-          Add Image
-        </button>
-        {fileArray.map((file, index) => (
-          <div
-            className={stl.fileBlock}
-            key={index}
-            onClick={() => {
-              focusImage(index);
-              console.log(canvas.getActiveObject());
-            }}
-          >
-            <span>{file?.name}</span>
-            <FaTrashCan
-              className={stl.trash}
-              onClick={() => deleteImage(index)}
-            />
-          </div>
-        ))}
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          onChange={handleImageUpload}
-          className={stl.hidden}
+      <div className={stl.appWrapper}>
+        <h1 className={stl.title}>
+          <img
+            src="../Yakublogo.webp"
+            alt="Yakublogo"
+            className={stl.yakubLogo}
+          />{" "}
+          Maker
+        </h1>
+        <canvas
+          id="canvas"
+          ref={canvasRef}
+          className={stl.canvas}
+          width="100vw"
         />
-      </div>
-      <div className={stl.assetsArray}>
-        <button className={stl.addCta}>Presets</button>
-        <div className={stl.fileBlock}>
-          <img src="../Preset.png" alt="Preset" className={stl.presetImg} />
+        <div className={stl.assetsArray}>
+          <button className={stl.addCta} onClick={handleAddImageClick}>
+            <FaPlus />
+            Add Image
+          </button>
+          {fileArray.map((file, index) => (
+            <div
+              className={stl.fileBlock}
+              key={index}
+              onClick={() => {
+                focusImage(index);
+                console.log(canvas.getActiveObject());
+              }}
+            >
+              <span>{file?.name}</span>
+              <FaTrashCan
+                className={stl.trash}
+                onClick={() => deleteImage(index)}
+              />
+            </div>
+          ))}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            className={stl.hidden}
+          />
+        </div>
+        <div className={stl.assetsArray}>
+          <button className={stl.addCta}>Presets</button>
+          <div className={stl.fileBlock}>
+            <img src="../Preset.png" alt="Preset" className={stl.presetImg} />
+          </div>
         </div>
       </div>
     </div>
