@@ -55,10 +55,6 @@ const Home = () => {
     fileInputRef.current.click();
   };
 
-  useEffect(() => {
-    console.log(fileArray);
-  }, [fileArray]);
-
   const deleteImage = (index) => {
     const objects = canvas.getObjects();
 
@@ -74,18 +70,22 @@ const Home = () => {
   const focusImage = (index) => {
     const objects = canvas.getObjects();
     canvas.discardActiveObject();
-    console.log(objects[index]);
+
     const selection = new ActiveSelection([objects[index]], {
       canvas: canvas,
     });
 
-    console.log(sel);
     canvas.setActiveObject(selection);
     canvas.requestRenderAll();
   };
 
+  const canvasClicked = () => {
+    const currentObject = canvas.getActiveObject();
+    console.log(currentObject);
+  };
+
   return (
-    <div className={stl.home}>
+    <div className={stl.home} onClick={canvasClicked}>
       <h1 className={stl.title}>
         <img
           src="../Yakublogo.webp"
@@ -109,7 +109,10 @@ const Home = () => {
           <div
             className={stl.fileBlock}
             key={index}
-            onClick={() => focusImage(index)}
+            onClick={() => {
+              focusImage(index);
+              console.log(canvas.getActiveObject());
+            }}
           >
             <span>{file?.name}</span>
             <FaTrashCan
@@ -125,6 +128,12 @@ const Home = () => {
           onChange={handleImageUpload}
           className={stl.hidden}
         />
+      </div>
+      <div className={stl.assetsArray}>
+        <button className={stl.addCta}>Presets</button>
+        <div className={stl.fileBlock}>
+          <img src="../Preset.png" alt="Preset" className={stl.presetImg} />
+        </div>
       </div>
     </div>
   );

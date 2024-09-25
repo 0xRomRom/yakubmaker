@@ -84,6 +84,8 @@
   padding: 0rem 0.5rem;
   flex: 0 0 auto;
   font-size: 12px;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .fileBlock:hover {
@@ -102,4 +104,12 @@
 
 .trash:hover {
   color: white;
+}
+
+.glow {
+  box-shadow: 0px 0px 5px rgb(0, 234, 39);
+}
+
+.presetImg {
+  width: 50px;
 }
