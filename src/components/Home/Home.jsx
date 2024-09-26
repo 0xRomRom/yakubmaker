@@ -1,6 +1,6 @@
 import stl from "./Home.module.css";
 import { useRef, useState, useEffect } from "react";
-import { Canvas, FabricImage, ActiveSelection } from "fabric";
+import { Canvas, FabricImage, ActiveSelection, Textbox } from "fabric";
 import "./Styles.css";
 import { FaPlus } from "react-icons/fa";
 import { FaTrashCan } from "react-icons/fa6";
@@ -49,6 +49,30 @@ const presets = [
   {
     preset: 11,
     src: "../Preset11.png",
+  },
+  {
+    preset: 12,
+    src: "../Preset12.png",
+  },
+  {
+    preset: 13,
+    src: "../Preset13.png",
+  },
+  {
+    preset: 14,
+    src: "../Preset14.png",
+  },
+  {
+    preset: 15,
+    src: "../Preset15.png",
+  },
+  {
+    preset: 16,
+    src: "../Preset16.png",
+  },
+  {
+    preset: 17,
+    src: "../Preset17.png",
   },
 ];
 
@@ -119,6 +143,13 @@ const Home = () => {
   const focusImage = (index) => {
     const objects = canvas.getObjects();
     canvas.discardActiveObject();
+    canvas.add(
+      new Textbox("I love fabricjs", {
+        left: 0, //Take the block's position
+        top: 0,
+        fill: "white",
+      })
+    );
 
     const selection = new ActiveSelection([objects[index]], {
       canvas: canvas,
