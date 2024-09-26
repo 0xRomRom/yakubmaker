@@ -5,6 +5,53 @@ import "./Styles.css";
 import { FaPlus } from "react-icons/fa";
 import { FaTrashCan } from "react-icons/fa6";
 
+const presets = [
+  {
+    preset: 1,
+    src: "../Preset1.png",
+  },
+  {
+    preset: 2,
+    src: "../Preset2.png",
+  },
+  {
+    preset: 3,
+    src: "../Preset3.png",
+  },
+  {
+    preset: 4,
+    src: "../Preset4.png",
+  },
+  {
+    preset: 5,
+    src: "../Preset5.png",
+  },
+  {
+    preset: 6,
+    src: "../Preset6.png",
+  },
+  {
+    preset: 7,
+    src: "../Preset7.png",
+  },
+  {
+    preset: 8,
+    src: "../Preset8.png",
+  },
+  {
+    preset: 9,
+    src: "../Preset9.png",
+  },
+  {
+    preset: 10,
+    src: "../Preset10.png",
+  },
+  {
+    preset: 11,
+    src: "../Preset11.png",
+  },
+];
+
 const Home = () => {
   const canvasRef = useRef(null);
   const fileInputRef = useRef(null); // Reference for the file input
@@ -86,6 +133,29 @@ const Home = () => {
     console.log(currentObject);
   };
 
+  const addPreset = (img) => {
+    const imgObj = new Image();
+    imgObj.src = img.src;
+    imgObj.onload = () => {
+      if (fileArray.length === 0) {
+        canvas.setWidth(imgObj.width);
+        canvas.setHeight(imgObj.height);
+      }
+      const fabricImg = new FabricImage(imgObj);
+      fabricImg.set({
+        left: 0,
+        top: 0,
+        selectable: true,
+      });
+      setFileArray((prev) => [
+        ...prev,
+        { ...fabricImg, name: `Preset ${img.preset}` },
+      ]);
+      canvas.add(fabricImg);
+      canvas.renderAll();
+    };
+  };
+
   return (
     <div className={stl.home} onClick={canvasClicked}>
       <div className={stl.appWrapper}>
@@ -134,9 +204,16 @@ const Home = () => {
         </div>
         <div className={stl.assetsArray}>
           <button className={stl.addCta}>Presets</button>
-          <div className={stl.fileBlock}>
-            <img src="../Preset.png" alt="Preset" className={stl.presetImg} />
-          </div>
+          {presets.map((preset, index) => (
+            <div
+              className={stl.fileBlock}
+              key={index}
+              onClick={() => addPreset(preset)}
+            >
+              <img src={preset.src} alt="Preset" className={stl.presetImg} />
+              <span>Preset {index + 1}</span>
+            </div>
+          ))}
         </div>
       </div>
     </div>
