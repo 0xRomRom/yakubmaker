@@ -124,3 +124,27 @@
   width: 50px;
   height: 50px;
 }
+
+.saveCta {
+  width: 15rem;
+  max-width: 810px;
+  height: 3rem;
+  background-color: transparent;
+  outline: none;
+  border: none;
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+
+  background-color: rgba(254, 2, 254, 0.8);
+  cursor: pointer;
+  transition: all 0.1s ease-in-out;
+  margin-bottom: 1rem;
+  margin: 1rem auto;
+  font-weight: bold;
+}
+
+.saveCta:hover {
+  background-color: rgba(254, 2, 254, 1);
+  color: white;
+}

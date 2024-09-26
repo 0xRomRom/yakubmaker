@@ -86,12 +86,13 @@ const Home = () => {
   useEffect(() => {
     if (canvasRef.current) {
       const initCanvas = new Canvas(canvasRef.current, {
-        // width: 500,
-        // height: 500,
+        width: 500,
+        height: 500,
       });
       initCanvas.backgroundColor = "#000";
       initCanvas.renderAll();
       setCanvas(initCanvas);
+
       return () => {
         initCanvas.dispose();
       };
@@ -186,14 +187,14 @@ const Home = () => {
       left: 0, //Take the block's position
       top: 0,
       fill: "white",
-      width: 10,
-      height: 10,
-      // lockScalingX: true,
-      // lockScalingY: true,
+    });
+    textObject.set({
+      scaleX: 1,
+      scaleY: 1,
     });
     canvas.add(textObject);
     setTextArray((prev) => [...prev, textObject]);
-    // canvas.renderAll();
+    canvas.renderAll();
   };
 
   const focusText = (index) => {
@@ -217,6 +218,21 @@ const Home = () => {
     if (objects.length > index) {
       canvas.remove(objects[index]);
       canvas.renderAll();
+    }
+  };
+
+  const saveCanvasAsImage = () => {
+    if (canvas) {
+      const dataUrl = canvas.toDataURL({
+        format: "png",
+        quality: 1,
+      });
+
+      // Create an anchor element and trigger a download
+      const link = document.createElement("a");
+      link.href = dataUrl;
+      link.download = "YAKUB.png";
+      link.click();
     }
   };
 
@@ -292,7 +308,7 @@ const Home = () => {
                 focusText(index);
               }}
             >
-              <span>Text {index}</span>
+              <span>Text {index + 1}</span>
               <FaTrashCan
                 className={stl.trash}
                 onClick={() => deleteText(index)}
@@ -300,6 +316,9 @@ const Home = () => {
             </div>
           ))}
         </div>
+        <button className={stl.saveCta} onClick={saveCanvasAsImage}>
+          Save Image
+        </button>
       </div>
     </div>
   );
