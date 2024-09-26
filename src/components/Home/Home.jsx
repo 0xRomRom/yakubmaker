@@ -81,6 +81,7 @@ const Home = () => {
   const fileInputRef = useRef(null); // Reference for the file input
   const [canvas, setCanvas] = useState(false);
   const [fileArray, setFileArray] = useState([]);
+  const [textArray, setTextArray] = useState([]);
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -143,13 +144,6 @@ const Home = () => {
   const focusImage = (index) => {
     const objects = canvas.getObjects();
     canvas.discardActiveObject();
-    canvas.add(
-      new Textbox("I love fabricjs", {
-        left: 0, //Take the block's position
-        top: 0,
-        fill: "white",
-      })
-    );
 
     const selection = new ActiveSelection([objects[index]], {
       canvas: canvas,
@@ -187,6 +181,45 @@ const Home = () => {
     };
   };
 
+  const handleAddText = () => {
+    const textObject = new Textbox("YAKUB", {
+      left: 0, //Take the block's position
+      top: 0,
+      fill: "white",
+      width: 10,
+      height: 10,
+      // lockScalingX: true,
+      // lockScalingY: true,
+    });
+    canvas.add(textObject);
+    setTextArray((prev) => [...prev, textObject]);
+    // canvas.renderAll();
+  };
+
+  const focusText = (index) => {
+    const objects = canvas.getObjects();
+    canvas.discardActiveObject();
+
+    const selection = new ActiveSelection([objects[index]], {
+      canvas: canvas,
+    });
+
+    canvas.setActiveObject(selection);
+    canvas.requestRenderAll();
+  };
+
+  const deleteText = (index) => {
+    const objects = canvas.getObjects();
+
+    const updatedTextArray = textArray.filter((_, i) => i !== index);
+    setTextArray(updatedTextArray);
+
+    if (objects.length > index) {
+      canvas.remove(objects[index]);
+      canvas.renderAll();
+    }
+  };
+
   return (
     <div className={stl.home} onClick={canvasClicked}>
       <div className={stl.appWrapper}>
@@ -205,6 +238,19 @@ const Home = () => {
           width="100vw"
         />
         <div className={stl.assetsArray}>
+          <button className={stl.addCta}>Presets</button>
+          {presets.map((preset, index) => (
+            <div
+              className={stl.fileBlock}
+              key={index}
+              onClick={() => addPreset(preset)}
+            >
+              <img src={preset.src} alt="Preset" className={stl.presetImg} />
+              <span>Preset {index + 1}</span>
+            </div>
+          ))}
+        </div>
+        <div className={stl.assetsArray}>
           <button className={stl.addCta} onClick={handleAddImageClick}>
             <FaPlus />
             Add Image
@@ -215,7 +261,6 @@ const Home = () => {
               key={index}
               onClick={() => {
                 focusImage(index);
-                console.log(canvas.getActiveObject());
               }}
             >
               <span>{file?.name}</span>
@@ -233,16 +278,25 @@ const Home = () => {
             className={stl.hidden}
           />
         </div>
+
         <div className={stl.assetsArray}>
-          <button className={stl.addCta}>Presets</button>
-          {presets.map((preset, index) => (
+          <button className={stl.addCta} onClick={handleAddText}>
+            <FaPlus />
+            Add Text
+          </button>
+          {textArray.map((text, index) => (
             <div
               className={stl.fileBlock}
               key={index}
-              onClick={() => addPreset(preset)}
+              onClick={() => {
+                focusText(index);
+              }}
             >
-              <img src={preset.src} alt="Preset" className={stl.presetImg} />
-              <span>Preset {index + 1}</span>
+              <span>Text {index}</span>
+              <FaTrashCan
+                className={stl.trash}
+                onClick={() => deleteText(index)}
+              />
             </div>
           ))}
         </div>

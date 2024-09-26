@@ -9,7 +9,7 @@
 ::-webkit-scrollbar {
   width: 12px;
   background-color: var(--dark-bg);
-  height: 0.625rem;
+  height: 1rem;
   width: 0.625rem;
   background-color: transparent;
 }
