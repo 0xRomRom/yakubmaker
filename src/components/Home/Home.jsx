@@ -154,9 +154,8 @@ const Home = () => {
     canvas.requestRenderAll();
   };
 
-  const canvasClicked = () => {
-    const currentObject = canvas.getActiveObject();
-    console.log(currentObject);
+  const loseFocus = () => {
+    canvas.discardActiveObject();
   };
 
   const addPreset = (img) => {
@@ -237,7 +236,8 @@ const Home = () => {
   };
 
   return (
-    <div className={stl.home} onClick={canvasClicked}>
+    <div className={stl.home}>
+      <div className={stl.block} onClick={loseFocus}></div>
       <div className={stl.appWrapper}>
         <h1 className={stl.title}>
           <img
@@ -320,6 +320,7 @@ const Home = () => {
           Save Image
         </button>
       </div>
+      <div className={stl.block} onClick={loseFocus}></div>
     </div>
   );
 };
