@@ -78,10 +78,43 @@ const presets = [
 
 const Home = () => {
   const canvasRef = useRef(null);
-  const fileInputRef = useRef(null); // Reference for the file input
+  const fileInputRef = useRef(null);
   const [canvas, setCanvas] = useState(false);
   const [fileArray, setFileArray] = useState([]);
-  const [textArray, setTextArray] = useState([]);
+  const [balance, setBalance] = useState(0);
+
+  useEffect(() => {
+    if (balance) return;
+    const url =
+      "https://mainnet.helius-rpc.com/?api-key=a337d1f8-468e-4627-8fb9-3145064cfe8e";
+
+    const getAssetsByOwner = async () => {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          jsonrpc: "2.0",
+          id: "my-id",
+          method: "getAssetsByOwner",
+          params: {
+            ownerAddress: "74U2V11CfGsDM1xSoTo1e8B2J4sX292ovffthcWywsgs",
+            page: 1, // Starts at 1
+            limit: 1000,
+            displayOptions: {
+              showFungible: true, //return both fungible and non-fungible tokens
+            },
+          },
+        }),
+      });
+      const { result } = await response.json();
+      const yakubBalance = result.items[0].token_info.balance / 1_000_000;
+      console.log(yakubBalance);
+      console.log("Assets by Owner: ", result.items);
+    };
+    getAssetsByOwner();
+  }, []);
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -154,18 +187,10 @@ const Home = () => {
     canvas.requestRenderAll();
   };
 
-  const loseFocus = () => {
-    canvas.discardActiveObject();
-  };
-
   const addPreset = (img) => {
     const imgObj = new Image();
     imgObj.src = img.src;
     imgObj.onload = () => {
-      if (fileArray.length === 0) {
-        canvas.setWidth(imgObj.width);
-        canvas.setHeight(imgObj.height);
-      }
       const fabricImg = new FabricImage(imgObj);
       fabricImg.set({
         left: 0,
@@ -176,6 +201,7 @@ const Home = () => {
         ...prev,
         { ...fabricImg, name: `Preset ${img.preset}` },
       ]);
+
       canvas.add(fabricImg);
       canvas.renderAll();
     };
@@ -183,41 +209,16 @@ const Home = () => {
 
   const handleAddText = () => {
     const textObject = new Textbox("YAKUB", {
-      left: 0, //Take the block's position
+      left: 0,
       top: 0,
       fill: "white",
+      editable: true,
     });
-    textObject.set({
-      scaleX: 1,
-      scaleY: 1,
-    });
+
     canvas.add(textObject);
-    setTextArray((prev) => [...prev, textObject]);
+
+    setFileArray((prev) => [...prev, { ...textObject, name: "Text" }]);
     canvas.renderAll();
-  };
-
-  const focusText = (index) => {
-    const objects = canvas.getObjects();
-    canvas.discardActiveObject();
-
-    const selection = new ActiveSelection([objects[index]], {
-      canvas: canvas,
-    });
-
-    canvas.setActiveObject(selection);
-    canvas.requestRenderAll();
-  };
-
-  const deleteText = (index) => {
-    const objects = canvas.getObjects();
-
-    const updatedTextArray = textArray.filter((_, i) => i !== index);
-    setTextArray(updatedTextArray);
-
-    if (objects.length > index) {
-      canvas.remove(objects[index]);
-      canvas.renderAll();
-    }
   };
 
   const saveCanvasAsImage = () => {
@@ -227,7 +228,6 @@ const Home = () => {
         quality: 1,
       });
 
-      // Create an anchor element and trigger a download
       const link = document.createElement("a");
       link.href = dataUrl;
       link.download = "YAKUB.png";
@@ -237,7 +237,6 @@ const Home = () => {
 
   return (
     <div className={stl.home}>
-      <div className={stl.block} onClick={loseFocus}></div>
       <div className={stl.appWrapper}>
         <h1 className={stl.title}>
           <img
@@ -271,6 +270,10 @@ const Home = () => {
             <FaPlus />
             Add Image
           </button>
+          <button className={stl.addCta} onClick={handleAddText}>
+            <FaPlus />
+            Add Text
+          </button>
           {fileArray.map((file, index) => (
             <div
               className={stl.fileBlock}
@@ -295,32 +298,36 @@ const Home = () => {
           />
         </div>
 
-        <div className={stl.assetsArray}>
-          <button className={stl.addCta} onClick={handleAddText}>
-            <FaPlus />
-            Add Text
-          </button>
-          {textArray.map((text, index) => (
-            <div
-              className={stl.fileBlock}
-              key={index}
-              onClick={() => {
-                focusText(index);
-              }}
-            >
-              <span>Text {index + 1}</span>
-              <FaTrashCan
-                className={stl.trash}
-                onClick={() => deleteText(index)}
-              />
-            </div>
-          ))}
-        </div>
         <button className={stl.saveCta} onClick={saveCanvasAsImage}>
           Save Image
         </button>
+        <div className={stl.devBox}>
+          <span>
+            Yakub Maker is an unofficial community tool by{" "}
+            <span
+              className={stl.dev}
+              onClick={() => window.open("https://x.com/0xromrom", "_blank")}
+            >
+              0xRomRom
+            </span>
+          </span>
+          <span>Tip me some $YAKUB (:</span>
+          <div className={stl.goalbox}>
+            <span>Goal: 1M $YAKUB</span>
+            <div className={stl.trackBox}>
+              <img
+                src="../Preset2.png"
+                alt="Yakub"
+                className={stl.progressyakub}
+              />
+              <div className={stl.track}></div>
+              <span className={stl.zero}>0%</span>
+              <span className={stl.oneM}>100%</span>
+              <span className={stl.counter}>12,330,1</span>
+            </div>
+          </div>
+        </div>
       </div>
-      <div className={stl.block} onClick={loseFocus}></div>
     </div>
   );
 };

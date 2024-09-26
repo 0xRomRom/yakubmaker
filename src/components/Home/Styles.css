@@ -8,14 +8,14 @@
 }
 
 #canvas {
-  width: 90% !important;
+  width: 95% !important;
   height: 60vh !important;
   border-radius: 0.5rem !important;
 }
 
 .upper-canvas {
-  width: 90% !important;
+  width: 95% !important;
   height: 60vh !important;
-  left: 5% !important;
+  left: 2.5% !important;
   border-radius: 0.5rem !important;
 }
