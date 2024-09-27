@@ -4,6 +4,7 @@ import { Canvas, FabricImage, ActiveSelection, Textbox } from "fabric";
 import "./Styles.css";
 import { FaPlus } from "react-icons/fa";
 import { FaTrashCan } from "react-icons/fa6";
+import { FaRegCopy } from "react-icons/fa";
 
 const presets = [
   {
@@ -82,6 +83,7 @@ const Home = () => {
   const [canvas, setCanvas] = useState(false);
   const [fileArray, setFileArray] = useState([]);
   const [balance, setBalance] = useState(0);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     if (balance) return;
@@ -99,17 +101,24 @@ const Home = () => {
           id: "my-id",
           method: "getAssetsByOwner",
           params: {
-            ownerAddress: "74U2V11CfGsDM1xSoTo1e8B2J4sX292ovffthcWywsgs",
-            page: 1, // Starts at 1
+            ownerAddress: "F8zic9M9j2df3sTFtQdLTUSa4rQakTt1vZp2xwnMozt3",
+            page: 1,
             limit: 1000,
             displayOptions: {
-              showFungible: true, //return both fungible and non-fungible tokens
+              showFungible: true,
             },
           },
         }),
       });
       const { result } = await response.json();
-      const yakubBalance = result.items[0].token_info.balance / 1_000_000;
+      const yakubBalance = Math.floor(
+        result.items[0].token_info.balance / 1_000_000
+      );
+      setBalance(yakubBalance || 0);
+
+      const percentage = Math.floor((yakubBalance / 1_000_000) * 100);
+      setProgress(percentage);
+      console.log(percentage);
       console.log(yakubBalance);
       console.log("Assets by Owner: ", result.items);
     };
@@ -235,8 +244,28 @@ const Home = () => {
     }
   };
 
+  const handleCopy = async () => {
+    navigator.clipboard
+      .writeText("F8zic9M9j2df3sTFtQdLTUSa4rQakTt1vZp2xwnMozt3")
+      .then(() => {
+        alert(`Thanks so much <3 uwu`);
+      })
+      .catch((err) => {
+        console.error("Failed to copy: ", err);
+      });
+  };
+
   return (
     <div className={stl.home}>
+      {fileArray.length === 0 && (
+        <div className={stl.overlay}>
+          <span>
+            Yakub Maker is <u>the</u> tool to Yakibufy anything!
+          </span>
+          <span>Start by uploading your image.</span>
+          <img src="../Preset2.png" alt="Yakub" className={stl.overlayImg} />
+        </div>
+      )}
       <div className={stl.appWrapper}>
         <h1 className={stl.title}>
           <img
@@ -311,7 +340,7 @@ const Home = () => {
               0xRomRom
             </span>
           </span>
-          <span>Tip me some $YAKUB (:</span>
+          <span>Tip me some $YAKUB ♥</span>
           <div className={stl.goalbox}>
             <span>Goal: 1M $YAKUB</span>
             <div className={stl.trackBox}>
@@ -319,12 +348,21 @@ const Home = () => {
                 src="../Preset2.png"
                 alt="Yakub"
                 className={stl.progressyakub}
+                style={{
+                  left: `calc(${progress}% - 10px)`,
+                }}
               />
               <div className={stl.track}></div>
               <span className={stl.zero}>0%</span>
               <span className={stl.oneM}>100%</span>
-              <span className={stl.counter}>12,330,1</span>
+              <span className={stl.counter}>{balance.toLocaleString()}</span>
             </div>
+          </div>
+          <div className={stl.walletBox}>
+            <span className={stl.walletSpan} onClick={handleCopy}>
+              F8zic9M9j2df3sTFtQdLTUSa4rQakTt1vZp2xwnMozt3{" "}
+              <FaRegCopy className={stl.copyIcon} />
+            </span>
           </div>
         </div>
       </div>
