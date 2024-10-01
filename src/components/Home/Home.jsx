@@ -75,6 +75,10 @@ const presets = [
     preset: 17,
     src: "../Preset17.png",
   },
+  {
+    preset: 18,
+    src: "../Preset18.png",
+  },
 ];
 
 const Home = () => {
@@ -338,33 +342,9 @@ const Home = () => {
               className={stl.dev}
               onClick={() => window.open("https://x.com/0xromrom", "_blank")}
             >
-              0xRomRom
+              0xRomRom ♥
             </span>
           </span>
-          <span>Tip me some $YAKUB ♥</span>
-          <div className={stl.goalbox}>
-            <span>Goal: 1M $YAKUB</span>
-            <div className={stl.trackBox}>
-              <img
-                src="../Preset2.png"
-                alt="Yakub"
-                className={stl.progressyakub}
-                style={{
-                  left: `calc(${progress}% - 10px)`,
-                }}
-              />
-              <div className={stl.track}></div>
-              <span className={stl.zero}>0%</span>
-              <span className={stl.oneM}>100%</span>
-              <span className={stl.counter}>{balance.toLocaleString()}</span>
-            </div>
-          </div>
-          <div className={stl.walletBox}>
-            <span className={stl.walletSpan} onClick={handleCopy}>
-              F8zic9M9j2df3sTFtQdLTUSa4rQakTt1vZp2xwnMozt3{" "}
-              <FaRegCopy className={stl.copyIcon} />
-            </span>
-          </div>
         </div>
       </div>
     </div>
