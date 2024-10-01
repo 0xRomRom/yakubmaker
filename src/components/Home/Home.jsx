@@ -222,6 +222,7 @@ const Home = () => {
       top: 0,
       fill: "white",
       editable: true,
+      fontFamily: "Helvetica",
     });
 
     canvas.add(textObject);
